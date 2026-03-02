@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutor IA</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; padding: 0 20px; }
+        form { display: flex; flex-direction: column; gap: 10px; }
+        label { font-weight: bold; }
+        input, select, textarea { padding: 8px; }
+        button { padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Tutor IA</h1>
+    <form method="POST">
+        <label>Tópico:</label>
+        <input type="text" name="topico" required>
+        
+        <label>Nome do Aluno:</label>
+        <input type="text" name="nome" required>
+        
+        <label>Idade:</label>
+        <input type="number" name="idade" required>
+        
+        <label>Nível:</label>
+        <select name="nivel">
+            <option value="Iniciante">Iniciante</option>
+            <option value="Intermediário">Intermediário</option>
+            <option value="Avançado">Avançado</option>
+        </select>
+        
+        <label>Estilo de Aprendizagem:</label>
+        <select name="estilo">
+            <option value="Visual">Visual</option>
+            <option value="Auditivo">Auditivo</option>
+            <option value="Leitura-Escrita">Leitura-Escrita</option>
+            <option value="Cinestésico">Cinestésico</option>
+        </select>
+        <div>
+            <button type="submit">Gerar explicação</button>
+            <button type="submit">Gerar exemplo</button>
+            <button type="submit">Gerar exercício</button>
+            <button type="submit">Gerar mapa mental</button>
+        </div>
+    </form>
+
+</body>
+</html>
