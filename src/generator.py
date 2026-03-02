@@ -13,7 +13,7 @@ def call_api(client, prompt):
     Chama a API Gemini com o prompt gerado e retorna a resposta.
     """
     resposta = client.models.generate_content(
-        model='gemini-1.5-flash',
+        model='gemini-2.5-flash',
         contents=prompt
         )
     return resposta.text
