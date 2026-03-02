@@ -19,9 +19,9 @@ def rodar_menu(client):
     """
     print("--- Bem-vindo à Plataforma Educativa IA ---")
     
-    perfil = selecionar_perfil(client)
+    perfil = selecionar_perfil()
 
-    topico = selecionar_topico(client)
+    topico = selecionar_topico()
 
     while True:
 
@@ -89,7 +89,7 @@ def criar_perfil(perfis):
     '''
     Permite ao usuário criar um novo perfil de aluno
     '''
-    perfil = obter_valores_perfil(perfis)
+    perfil = _obter_valores_perfil(perfis)
     salvar_perfil(perfil)
     return perfil
 
@@ -99,10 +99,10 @@ def editar_perfil(perfis, perfil_atual):
     '''
     print(f"Editando perfil: {perfil_atual['nome']}")
     print("Deixe o campo em branco para manter o valor atual.")
-    perfil = obter_valores_perfil(perfis)
+    perfil = _obter_valores_perfil(perfis)
     perfil["nome"] = perfil_atual["nome"]
 
-def obter_valores_perfil(perfis, perfil_atual=None):
+def _obter_valores_perfil(perfis, perfil_atual=None):
 
     if not perfil_atual:
             perfil_atual = {
