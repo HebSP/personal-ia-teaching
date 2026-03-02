@@ -47,6 +47,22 @@ De apenas o exercício de fixação sem nenhum texto adicional.
 """
     return prompt.strip()
 
+def gerar_prompt_visual(topico, perfil):
+    """
+    Gera um prompt para criar representações visuais adaptadas ao perfil do aluno.
+    """
+
+    tarefa = f"Analise passo a passo e encontre a melhor forma de criar um mapa mental sobre o tema '{topico}' para este aluno.\nPrimeiro, revise cada conceito e suas ligações no mapa que você vai criar, e depois forneça a representação visual estruturada.\n"
+
+    prompt = f"""
+{_persona_e_papel(perfil, topico)}
+{tarefa}
+{_diretrizes_visual(perfil)}
+De apenas a representação visual como um mapa mental em ascii sem nenhum texto adicional.
+"""
+    return prompt.strip()
+
+
 def _persona_e_papel(perfil, topico):
     """
     Retorna uma descrição da persona e do papel do tutor com base no perfil do aluno.
@@ -140,5 +156,50 @@ def _diretrizes(perfil):
     
 
     complementos.append(f"Considere que o aluno {subcomplemento[0]}possui um conhecimento {nivel.lower()}, use vocabulário e exemplos adequados.\n")
+    diretrizes = f"Diretrizes de ensino: {' '.join(complementos)}"
+    return diretrizes
+
+def _diretrizes_visual(perfil):
+    """
+    Retorna diretrizes de ensino personalizadas com base no perfil do aluno e no tópico, apenas para representações visuais sem texto solto.
+    """
+    idade = perfil.get("idade", 0)
+    nivel = perfil.get("nivel", "Iniciante")
+    estilo = perfil.get("estilo_aprendizagem", "leitura-escrita")
+
+    complementos = []
+
+    estilos = {
+        "Visual": "Foque em um layout espacial claro, usando símbolos para mostrar hierarquia.\n",
+        "Auditivo": "Foque em uma estrutura hierárquica que conte uma história lógica. Use palavras-chave numa estrutura de perguntas e respostas entre os nós.\n",
+        "Leitura-Escrita": "foque em definições claras e textos organizados nas ramificações.\n",
+        "Cinestésico": "Use analogias de 'fluxo de ação' ou 'processos'. O mapa deve mostrar como algo funciona passo a passo.\n"
+    }
+
+    complementos.append(estilos.get(estilo, "Use uma linguagem clara e acessível.\n"))
+
+    niveis = {
+        "Iniciante": "Crie um mapa mental simples, explicando os conceitos fundamentais de forma simples.\n",
+        "Intermediário": "Crie um mapa mental elaborado, com exemplos e detalhes mais importantes.\n",
+        "Avançado": "Crie um mapa mental denso, mostrando interconexões complexas entre os vários conceitos relacionados.\n"
+    }
+    complementos.append(niveis.get(nivel, "crie um mapa mental apresentando o tema de forma clara e organizada.\n"))
+
+    subcomplemento = []
+
+    if idade <= 0:
+        subcomplemento.append("") # caso de exceção
+    elif idade < 6:
+        subcomplemento.append("está no inicio da infancia e ")
+    elif idade < 12:
+        subcomplemento.append("está na fase final da infancia e ")
+    elif idade < 18:
+        subcomplemento.append("está na fase adolescente e ")
+    else:
+        subcomplemento.append("é um adulto e ")
+
+    
+
+    complementos.append(f"Considere que o aluno {subcomplemento[0]}possui um conhecimento {nivel.lower()}, use vocabulário e conceitos adequados.\n")
     diretrizes = f"Diretrizes de ensino: {' '.join(complementos)}"
     return diretrizes
