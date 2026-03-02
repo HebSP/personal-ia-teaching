@@ -3,19 +3,15 @@ def gerar_prompt_explicacao(topico, perfil):
     """
     Gera um prompt para explicação conceitual adaptado ao perfil do aluno.
     """
-    nivel = perfil.get("nivel", "Iniciante")
-    estilo = perfil.get("estilo_aprendizagem", "Visual")
-    formato = _formatar_por_estilo(estilo)
 
-    tarefa = f"analise passo a passo e encontre a melhor forma de explicar o tema '{topico}' para este aluno."
+    tarefa = f"Analise passo a passo e encontre a melhor forma de explicar o tema '{topico}' para este aluno.\nExplique sua lógica de escolha da analogia visual em uma frase breve, e depois forneça a explicação estruturada.\n"
 
     prompt = f"""
 {_persona_e_papel(perfil, topico)}
-
 {tarefa}
-
 {_diretrizes(perfil)}
-""" ##criar prompt aqui
+De apenas a explicação sem nenhum texto adicional.
+"""
     return prompt.strip()
 
 
@@ -23,10 +19,15 @@ def gerar_prompt_exemplo(topico, perfil):
     """
     Gera um prompt para criar exemplos práticos adaptados ao perfil do aluno.
     """
-    nivel = perfil.get("nivel", "Iniciante")
-    estilo = perfil.get("estilo_aprendizagem", "Visual")
-    formato = _formatar_por_estilo(estilo)
-    prompt = f""" """ ##criar prompt aqui
+
+    tarefa = f"Analise passo a passo e encontre a melhor forma de criar um exemplo prático sobre o tema '{topico}' para este aluno.\nPrimeiro, descreva brevemente o cenário que você vai criar para o exemplo, e depois forneça o exemplo prático estruturado.\n"
+
+    prompt = f"""
+{_persona_e_papel(perfil, topico)}
+{tarefa}
+{_diretrizes(perfil)}
+De apenas o exemplo prático sem nenhum texto adicional.
+"""
     return prompt.strip()
 
 
@@ -34,24 +35,17 @@ def gerar_prompt_exercicio(topico, perfil):
     """
     Gera um prompt para criar exercícios de fixação adaptados ao perfil do aluno.
     """
-    nivel = perfil.get("nivel", "Iniciante")
-    estilo = perfil.get("estilo_aprendizagem", "Visual")
-    formato = _formatar_por_estilo(estilo)
-    prompt = f""" """ ##criar prompt aqui
+
+    tarefa = f"Analise passo a passo e encontre a melhor forma de criar um exercício de fixação sobre o tema '{topico}' para este aluno.\n"
+    
+    prompt = f"""
+{_persona_e_papel(perfil, topico)}
+{tarefa}
+{_diretrizes(perfil)}
+O exercicio deve estimular o pensamento critico.
+De apenas o exercício de fixação sem nenhum texto adicional.
+"""
     return prompt.strip()
-
-
-def _formatar_por_estilo(estilo):
-    """
-    Retorna o formato da explicação baseado no estilo de aprendizagem.
-    """
-    formatos = {
-        "Visual": "Use diagramas, esquemas e descrições visuais",
-        "Auditivo": "Use uma linguagem fluida como se estivesse explicando verbalmente",
-        "Leitura-Escrita": "Use listas, textos estruturados e definições formais",
-        "Cinestésico": "Use exemplos prático com passos e atividades mãos-na-massa"
-    }
-    return formatos.get(estilo, "Linguagem clara e acessível")
 
 def _persona_e_papel(perfil, topico):
     """
@@ -83,14 +77,15 @@ def _persona_e_papel(perfil, topico):
         else:
             complementos.append("superior")
 
-    if nivel == "Iniciante":
-        complementos.append("está começando a aprender")
-    elif nivel == "Intermediário":
-        complementos.append("já tem alguma experiência com")
-    elif nivel == "Avançado":
-        complementos.append("possui um conhecimento aprofundado")
-    
-    persona = f"Você é um tutor com boa didática especializado em ensino {complementos[0]}, e vai ensinar sobre {topico} para um aluno que {complementos[1]}, que tem {idade} anos e prefere um estilo de aprendizagem {estilo}."
+    niveis = {
+        "Iniciante": "está começando a aprender",
+        "Intermediário": "já tem alguma experiência",
+        "Avançado": "possui um conhecimento aprofundado"
+    }
+
+    complementos.append(niveis.get(nivel, "tem interesse em aprender"))
+
+    persona = f"Você é um tutor com boa didática especializado em ensino {complementos[0]}, e vai ensinar sobre {topico} para um aluno que {complementos[1]}, que tem {idade} anos e prefere um estilo de aprendizagem {estilo}.\n"
     
     return persona
 
@@ -104,22 +99,30 @@ def _diretrizes(perfil):
 
     complementos = []
 
-    formatos = {
-        "Visual": "Use analogias visuais fortes, descreva cenas ou sugira diagramas simples.",
-        "Auditivo": "Use um tom narrativo, conversacional e exemplos focados em explicações verbais.",
-        "Leitura-Escrita": "Use listas estruturadas, tópicos, definições claras e textos organizados.",
-        "Cinestésico": "Use analogias de movimento, ações físicas ou exemplos práticos."
+    estilos = {
+        "Visual": "Use analogias visuais fortes, descreva cenas ou sugira diagramas simples.\n",
+        "Auditivo": "Use um tom narrativo, conversacional e exemplos focados em explicações verbais e perguntas para reflexão.\n",
+        "Leitura-Escrita": "Use listas estruturadas, tópicos, definições claras e textos organizados.\n",
+        "Cinestésico": "Use analogias de movimento, ações físicas ou exemplos práticos.\n"
     }
 
-    complementos.append(formatos.get(estilo, "Use uma linguagem clara e acessível."))
+    complementos.append(estilos.get(estilo, "Use uma linguagem clara e acessível.\n"))
 
     niveis = {
-        "Iniciante": "Inicie com conceitos básicos e exemplos simples.",
-        "Intermediário": "Incorpore desafios moderados e estimule a resolução de problemas.",
-        "Avançado": "Promova discussões profundas e análise crítica."
+        "Iniciante": "Inicie com conceitos básicos e exemplos simples.\n",
+        "Intermediário": "Incorpore desafios moderados e estimule a resolução de problemas.\n",
+        "Avançado": "Promova discussões profundas e análise crítica.\n"
     }
-    complementos.append(niveis.get(nivel, "Use uma abordagem adequada ao nível do aluno."))
+    complementos.append(niveis.get(nivel, "Use uma abordagem adequada ao nível do aluno.\n"))
 
+    formatos = {
+        "Visual": "Estruture a resposta usando bullet points, negrito para destacar palavras-chave e tópicos bem organizados.\n",
+        "Auditivo": "Estruture a resposta como um roteiro de conversa ou um podcast curto. Use frases mais longas e fluidas, e inclua perguntas retóricas para o aluno refletir enquanto 'ouve' mentalmente.\n",
+        "Leitura-Escrita": "Estruture a resposta com títulos claros, parágrafos bem definidos e listas numeradas para passos sequenciais. Foque em definições precisas.\n",
+        "Cinestésico": "Estruture a resposta focando em 'passo a passo' ou um roteiro. Use verbos de ação e apresente o conteúdo de forma prática.\n"
+    }
+
+    complementos.append(formatos.get(estilo, "apresente um texto coerente em paragrafos de facil leitura\n"))
 
     subcomplemento = []
 
@@ -136,6 +139,6 @@ def _diretrizes(perfil):
 
     
 
-    complementos.append(f"Considere que o aluno {subcomplemento[0]}possui um conhecimento {nivel.lower()}, use vocabulário e exemplos adequados.")
+    complementos.append(f"Considere que o aluno {subcomplemento[0]}possui um conhecimento {nivel.lower()}, use vocabulário e exemplos adequados.\n")
     diretrizes = f"Diretrizes de ensino: {' '.join(complementos)}"
     return diretrizes
