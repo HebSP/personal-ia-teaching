@@ -1,0 +1,204 @@
+:root {
+    --primary-color: #4a90e2;
+    --primary-hover: #357abd;
+    --bg-color: #f0f2f5;
+    --text-color: #333;
+    --box-bg: #ffffff;
+    --input-bg: #ffffff;
+    --input-border: #ced4da;
+    --result-border: #4a90e2;
+    --border-radius: 12px;
+
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary-color: #38bdf8;
+        --primary-hover: #0ea5e9;
+        --bg-color: #0f172a;
+        --text-color: #f1f5f9;
+        --box-bg: #1e293b;
+        --input-bg: #334155;
+        --input-border: #475569;
+        --result-border: #38bdf8;
+    }
+
+
+    .btn-primary {
+        color: #0f172a !important;
+        font-weight: 800;
+    }
+
+    h3 {
+        color: #94a3b8 !important;
+        border-bottom-color: #334155 !important;
+    }
+
+    .btn-secondary {
+        background: #334155;
+        color: #cbd5e1;
+    }
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+}
+
+h3 {
+    margin-top: 0;
+    color: #555;
+    border-bottom: 2px solid var(--bg-color);
+    padding-bottom: 10px;
+}
+
+.box {
+    background: var(--box-bg);
+    padding: 25px;
+    border-radius: var(--border-radius);
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: none;
+}
+
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+input[type="text"], 
+input[type="number"], 
+select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    box-sizing: border-box;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+.box {
+    background: var(--box-bg);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    margin-right: 5px;
+    margin-bottom: 10px;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: #e9ecef;
+    color: #495057;
+    padding: 8px 15px;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+    background: #dee2e6;
+}
+
+.resultado {
+    white-space: pre-wrap;
+    background-color: var(--box-bg);
+    color: var(--text-color);
+    border-left: 6px solid var(--result-border);
+    padding: 25px;
+    margin-top: 30px;
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    font-size: 1.1rem;
+}
+
+.alert-error {
+    padding: 15px;
+    margin: 10px 0;
+    margin-bottom: 20px;
+    border-radius: var(--border-radius);
+    border: 1px solid #f5c6cb;
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+    position: relative;
+
+}
+
+.resultado li {
+    list-style: none;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+/* Estilo para Tópico Principal (Pai) */
+.resultado .main-item {
+    margin-left: 20px;
+    font-weight: 600;
+}
+.resultado .main-item::before {
+    content: "•"; /* Bolinha maior */
+    color: var(--primary-color);
+    font-weight: bold;
+    display: inline-block; 
+    width: 1em;
+    margin-left: -1em;
+}
+
+/* Estilo para Sub-tópicos (Filho) - com mais recuo */
+.resultado .sub-item {
+    margin-left: 50px; /* Recuo maior */
+    font-size: 0.95rem;
+    font-weight: normal;
+}
+.resultado .sub-item::before {
+    content: "◦"; /* Bolinha vazada para diferenciar */
+    color: var(--primary-color);
+    display: inline-block;
+    width: 1em;
+    margin-left: -1em;
+}
+
+/* Destaca o strong dentro da lista */
+.resultado li strong {
+    color: var(--primary-color);
+}
