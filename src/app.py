@@ -1,30 +1,71 @@
-# app.py
-from flask import Flask, render_template, request, jsonify
-from generator import gerar_exemplo, gerar_exercicio, gerar_explicacao
-from storage import carregar_perfil, deletar_perfil, listar_perfis, salvar_perfil
+import os
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, session, redirect, url_for, flash
+from storage import listar_perfis, carregar_perfil, salvar_perfil
+from generator import configurar_cliente, gerar_exemplo, gerar_exercicio, gerar_explicacao, gerar_visual
 
+load_dotenv()
 
 app = Flask(__name__)
+app.secret_key = "uma_chave_secreta_qualquer"
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def index():
+    
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:    
+        flash("GEMINI_API_KEY não encontrada no arquivo .env", "error")
+        return render_template("index.html", perfis=perfis, resultado=None)
+    client = configurar_cliente(api_key)
+
+
+    perfis = listar_perfis()
     resultado = None
-    if request.method == 'POST':
-        # Pega os dados enviados pelo formulário HTML
-        topico = request.form.get('topico')
-        perfil = {
-            "nome": request.form.get('nome'),
-            "idade": request.form.get('idade'),
-            "nivel": request.form.get('nivel'),
-            "estilo_aprendizagem": request.form.get('estilo')
-        }
-        # Salva o perfil do aluno
-        salvar_perfil(perfil)
+    criando_perfil = request.args.get('novo_perfil') == '1'
 
-        ### muitos codigos
-        resultado = None
+    if request.method == "POST":
+        acao = request.form.get("acao")
 
-    return render_template('index.html', resultado=resultado)
+        # Ação: Selecionar Perfil Existente
+        if acao == "selecionar":
+            nome_perfil = request.form.get("perfil_selecionado")
+            session['perfil'] = carregar_perfil(nome_perfil)
+        
+        # Ação: Salvar Novo Perfil
+        elif acao == "salvar_novo":
+            novo_p = {
+                "nome": request.form.get("nome"),
+                "idade": int(request.form.get("idade")),
+                "nivel": request.form.get("nivel"),
+                "estilo_aprendizagem": request.form.get("estilo")
+            }
+            salvar_perfil(novo_p)
+            session['perfil'] = novo_p
+            return redirect(url_for('index'))
 
-if __name__ == '__main__':
+        # Ação: Gerar Conteúdo
+        elif acao in ["explicação", "exemplo", "exercício", "visual"]:
+            topico = request.form.get("topico")
+            perfil = session.get('perfil')
+            if acao == "explicação":
+                resultado = gerar_explicacao(client, topico, perfil)
+            elif acao == "exemplo":
+                resultado = gerar_exemplo(client, topico, perfil)
+            elif acao == "exercício":
+                resultado = gerar_exercicio(client, topico, perfil)
+            elif acao == "visual":
+                resultado = gerar_visual(client, topico, perfil)
+
+    return render_template("index.html", 
+                           perfis=perfis, 
+                           perfil_ativo=session.get('perfil'), 
+                           criando_perfil=criando_perfil,
+                           resultado=resultado)
+
+@app.route("/limpar")
+def limpar():
+    session.pop('perfil', None)
+    return redirect(url_for('index'))
+
+if __name__ == "__main__":
     app.run(debug=True)
