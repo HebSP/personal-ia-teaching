@@ -12,16 +12,16 @@ app.secret_key = "uma_chave_secreta_qualquer"
 @app.route("/", methods=["GET", "POST"])
 def index():
     
+    perfis = listar_perfis()
+    resultado = None
+    criando_perfil = request.args.get('novo_perfil') == '1'
+
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:    
         flash("GEMINI_API_KEY não encontrada no arquivo .env", "error")
         return render_template("index.html", perfis=perfis, resultado=None)
     client = configurar_cliente(api_key)
 
-
-    perfis = listar_perfis()
-    resultado = None
-    criando_perfil = request.args.get('novo_perfil') == '1'
 
     if request.method == "POST":
         acao = request.form.get("acao")
