@@ -44,8 +44,8 @@ body {
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-color);
-    max-width: 900px;
-    margin: 40px auto;
+    max-width: 100%;
+    margin: 20px 5%;
     padding: 0 20px;
     line-height: 1.6;
 }
@@ -170,7 +170,6 @@ input:focus, select:focus {
     margin-bottom: 10px;
 }
 
-/* Estilo para Tópico Principal (Pai) */
 .resultado .main-item {
     margin-left: 20px;
     font-weight: 600;
@@ -201,4 +200,35 @@ input:focus, select:focus {
 /* Destaca o strong dentro da lista */
 .resultado li strong {
     color: var(--primary-color);
+}
+
+.mapa-container {
+    justify-self: center !important;
+    width: fit-content !important;
+    max-width: 100% !important;
+    overflow: auto !important;
+    display: block !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+
+    contain: layout;
+    clear: both !important;
+
+    background: var(--bg-color);
+    border: 2px var(--result-border);
+    border-radius: 8px;
+    margin: 20px 0;
+
+}
+
+.mapa-container div div:hover {
+    transform: scale(1.05);
+    z-index: 999;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease;
+}
+
+body {
+    overflow-y: scroll !important; 
+    min-height: 100vh;
 }

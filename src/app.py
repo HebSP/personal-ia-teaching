@@ -75,7 +75,7 @@ def index():
             elif acao == "exercício":
                 resultado = formatar_resultado(gerar_exercicio(client, topico, perfil))
             elif acao == "visual":
-                resultado = gerar_visual(client, topico, perfil)
+                resultado = formatar_mapa(gerar_visual(client, topico, perfil))
 
     return render_template("index.html", 
                            perfis=perfis, 
@@ -98,8 +98,25 @@ def formatar_resultado(texto):
     
     # 3. Tópicos principais (sem espaço no início): * item -> <li class="main-item">
     texto = re.sub(r'(?m)^[*|-]\s+(.*)$', r'<li class="main-item">\1</li>', texto)
-    
+
     return texto
+
+def formatar_mapa(texto):
+    texto = texto.replace("body {", ".mapa-mental {")
+    estilo = re.search(r'<style>(.*?)</style>', texto, re.DOTALL)
+    # Extrai apenas o conteúdo do mapa
+    corpo = re.search(r'<body>.*?</body>', texto, re.DOTALL)
+    # Extrai o Script
+    script = re.search(r'<script>(.*?)</script>', texto, re.DOTALL)
+
+    res = ""
+    if estilo: res += f"<style>{estilo.group(1)}</style>"
+    
+    # Envolvemos em uma div com overflow para o scroll funcionar
+    if corpo: res += f'<div class="mapa-container">{corpo.group(0)}</div>'
+    if script: res += f"<script>{script.group(1)}</script>"
+
+    return res
 
 if __name__ == "__main__":
     app.run(debug=True)

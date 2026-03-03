@@ -1,4 +1,4 @@
-from prompts import gerar_prompt_exemplo, gerar_prompt_exercicio, gerar_prompt_explicacao, gerar_prompt_visual
+from prompts import gerar_prompt_exemplo, gerar_prompt_exercicio, gerar_prompt_explicacao, gerar_prompt_visual_html
 from cache import buscar_na_cache, salvar_na_cache
 from google import genai
 
@@ -62,7 +62,7 @@ def gerar_visual(client, topico, perfil):
     cache_result = buscar_na_cache(topico, perfil, "visual")
     if cache_result:
         return cache_result['resposta']
-    prompt = gerar_prompt_visual(topico, perfil)
+    prompt = gerar_prompt_visual_html(topico, perfil)
     resposta = call_api(client, prompt)
     salvar_na_cache(topico, perfil, "visual", resposta)
     return resposta
