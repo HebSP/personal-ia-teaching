@@ -2,6 +2,8 @@
 
 An educational platform that uses artificial intelligence and prompt engineering to provide individualized instruction based on the student's profile.
 
+disponivel em: [render](https://personal-ia-teaching.onrender.com/)
+
 ## Visão geral
 
 personal-ia-teaching é uma pequena aplicação Python que gera conteúdo educativo (explicações, exemplos, exercícios e mapas mentais) adaptados ao perfil do aluno usando a API Gemini (Google GenAI). A aplicação oferece:
