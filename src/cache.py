@@ -37,7 +37,7 @@ def buscar_na_cache(topico, perfil, tipo):
     Busca uma resposta no cache baseado em topico, perfil e tipo de conteúdo.
     """
     cache = _carregar_cache()
-    chave = f"{topico}_{perfil.get('nome', 'default')}_{tipo}"
+    chave = f"{topico}_{str(perfil.get('idade', 0))}_{perfil.get('nivel', 'default')}_{perfil.get('estilo_aprendizagem', 'default')}_{tipo}"
     return cache.get(chave)
 
 def salvar_na_cache(topico, perfil, tipo, resposta):
@@ -45,7 +45,7 @@ def salvar_na_cache(topico, perfil, tipo, resposta):
     Salva uma resposta no cache.
     """
     cache = _carregar_cache()
-    chave = f"{topico}_{perfil.get('nome', 'default')}_{tipo}"
+    chave = f"{topico}_{str(perfil.get('idade', 0))}_{perfil.get('nivel', 'default')}_{perfil.get('estilo_aprendizagem', 'default')}_{tipo}"
     cache[chave] = {
         "resposta": resposta,
         "data": datetime.now().isoformat()
