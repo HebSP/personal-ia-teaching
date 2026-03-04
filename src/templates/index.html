@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Tutor IA</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert-error">
+            <span style="float:right; cursor:pointer;" onclick="this.parentElement.style.display='none';">&times;</span>
+            <strong>Erro:</strong> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <h1>Tutor IA</h1>
+
+    <div class="box">
+        <h3>1. Perfil do Aluno</h3>
+        {% if not criando_perfil %}
+            <form method="POST">
+                <label>Selecionar Perfil Salvo:</label>
+                <select name="perfil_selecionado" onchange="this.form.submit()">
+                    <option value="">-- Escolha um perfil --</option>
+                    {% for p in perfis %}
+                        <option value="{{ p }}" {% if perfil_ativo and perfil_ativo.nome == p %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+                <input type="hidden" name="acao" value="selecionar">
+            </form>
+            {% if perfil_ativo %}
+                <p>
+                <a href="?novo_perfil=1" class="btn-secondary">Editar Perfil</a>
+                <a href="?deletar_perfil=1" class="btn-secondary" onclick="return confirm('Tem certeza que deseja deletar este perfil?');">Deletar Perfil</a></p>
+                </p>
+            {% else %}
+                <p>Ou: <a href="?novo_perfil=1" class="btn-secondary">Criar Novo Perfil</a></p>
+            {% endif %}
+        {% else %}
+            <form method="POST">
+                <input type="hidden" name="acao" value="salvar_novo">
+                <label>Nome:</label>
+                <input type="text" name="nome" 
+                    value="{{ perfil_ativo.nome if perfil_ativo else '' }}" 
+                    required >
+                <label>Idade:</label>
+                <input type="number" name="idade" 
+                    value="{{ perfil_ativo.idade if perfil_ativo else '' }}" 
+                    min="1" step="1" required>
+
+                <label>Nível:</label>
+                <select name="nivel">
+                    <option value="Iniciante" {{ 'selected' if perfil_ativo and perfil_ativo.nivel == 'Iniciante' else '' }}>Iniciante</option>
+                    <option value="Intermediário" {{ 'selected' if perfil_ativo and perfil_ativo.nivel == 'Intermediário' else '' }}>Intermediário</option>
+                    <option value="Avançado" {{ 'selected' if perfil_ativo and perfil_ativo.nivel == 'Avançado' else '' }}>Avançado</option>
+                </select>
+
+                <label>Estilo de Aprendizagem:</label>
+                <select name="estilo">
+                    {% set estilos = ["Visual", "Auditivo", "Leitura-Escrita", "Cinestésico"] %}
+                    {% for e in estilos %}
+                        <option value="{{ e }}" {{ 'selected' if perfil_ativo and perfil_ativo.estilo_aprendizagem == e else '' }}>{{ e }}</option>
+                    {% endfor %}
+                </select>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        {{ 'Salvar Alterações' if perfil_ativo else 'Criar Perfil' }}
+                    </button>
+                    <a href="{{ url_for('index') }}" class="btn-secondary">Cancelar</a>
+                </div>
+            </form>
+        {% endif %}
+
+        {% if perfil_ativo %}
+            <p><strong>Perfil Ativo:</strong> {{ perfil_ativo.nome }} ({{ perfil_ativo.nivel }}) | <a href="/limpar">Trocar</a></p>
+        {% endif %}
+    </div>
+
+    {% if perfil_ativo %}
+    <div class="box">
+        <h3>2. O que vamos estudar hoje?</h3>
+        <form method="POST">
+            <label>Tópico:</label>
+            <input type="text" name="topico" placeholder="Ex: Fotossíntese, Python, História do Brasil" required>
+            <div style="margin-top: 10px;">
+                <button type="submit" name="acao" value="explicação" class="btn-primary">Gerar Explicação</button>
+                <button type="submit" name="acao" value="exemplo" class="btn-primary">Gerar Exemplo</button>
+                <button type="submit" name="acao" value="exercício" class="btn-primary">Gerar Exercício</button>
+                <button type="submit" name="acao" value="visual" class="btn-primary">Gerar Recurso Visual</button>
+            </div>
+        </form>
+    </div>
+    {% endif %}
+
+    {% if resultado %}
+        <div class="resultado">
+            <h3>Resultado:</h3>
+            {{ resultado | safe }}
+        </div>
+    {% endif %}
+
+</body>
+</html>
