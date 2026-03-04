@@ -3,7 +3,7 @@ import re
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from storage import atualizar_perfil, deletar_perfil, listar_perfis, carregar_perfil, salvar_perfil
-from generator import configurar_cliente, gerar_exemplo, gerar_exercicio, gerar_explicacao, gerar_visual
+from generator import configurar_cliente, gerar_exemplo, gerar_exercicio, gerar_explicacao, gerar_visual_html
 
 load_dotenv()
 
@@ -75,7 +75,7 @@ def index():
             elif acao == "exercício":
                 resultado = formatar_resultado(gerar_exercicio(client, topico, perfil))
             elif acao == "visual":
-                resultado = formatar_mapa(gerar_visual(client, topico, perfil))
+                resultado = formatar_mapa(gerar_visual_html(client, topico, perfil))
 
     return render_template("index.html", 
                            perfis=perfis, 

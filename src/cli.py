@@ -1,5 +1,26 @@
-from generator import gerar_exemplo, gerar_exercicio, gerar_explicacao
+import os
+from dotenv import load_dotenv
+from generator import configurar_cliente, gerar_exemplo, gerar_exercicio, gerar_explicacao, gerar_visual_cli
 from storage import carregar_perfil, deletar_perfil, listar_perfis, salvar_perfil
+
+load_dotenv()
+
+def main():
+    """
+    Função principal que inicia a aplicação.
+    """
+
+    inicializar_interface()
+
+    api_key = os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        
+        error_mensagem("GEMINI_API_KEY não encontrada no arquivo .env")
+        return
+    
+    client = configurar_cliente(api_key)
+
+    rodar_menu(client)
 
 def inicializar_interface():
     '''
@@ -31,14 +52,15 @@ def rodar_menu(client):
         print("1. Gerar explicação conceitual")
         print("2. Criar exemplo prático")
         print("3. gerar exercício de fixação")
-        print("4. escolher outro tópico")
-        print("5. escolher outro perfil")
-        print("6. editar perfil atual")
-        print("7. Deletar perfil atual")
-        print("8. Sair")
+        print("4. Gerar visualização (mind map)")
+        print("5. escolher outro tópico")
+        print("6. escolher outro perfil")
+        print("7. editar perfil atual")
+        print("8. Deletar perfil atual")
+        print("9. Sair")
 
-        opcao = input("\nEscolha uma opção (1-8): ").strip()
-        
+        opcao = input("\nEscolha uma opção (1-9): ").strip()
+
         if opcao == "1":
             print(gerar_explicacao(client, topico, perfil))
         elif opcao == "2":
@@ -46,17 +68,19 @@ def rodar_menu(client):
         elif opcao == "3":
             print(gerar_exercicio(client, topico, perfil))
         elif opcao == "4":
-            topico = selecionar_topico()
+            print(gerar_visual_cli(client, topico, perfil))
         elif opcao == "5":
-            perfil = selecionar_perfil()
+            topico = selecionar_topico()
         elif opcao == "6":
-            perfil = editar_perfil(listar_perfis(), perfil)
+            perfil = selecionar_perfil()
         elif opcao == "7":
+            perfil = editar_perfil(listar_perfis(), perfil)
+        elif opcao == "8":
             deletar_perfil(perfil["nome"])
             print(f"Perfil '{perfil['nome']}' deletado com sucesso.")
             print("Selecione um novo perfil para continuar:")
             perfil = selecionar_perfil()
-        elif opcao == "8":
+        elif opcao == "9":
             print("Encerrando a aplicação. Até logo!")
             break
         else:
@@ -76,7 +100,7 @@ def selecionar_perfil():
     while True:
         opcao = input("\nDigite o número do perfil ou 'n' para criar um novo perfil:").strip()
         if opcao.lower() == 'n':
-            criar_perfil(perfis)
+            perfil = criar_perfil(perfis)
             break
         elif opcao.isdigit() and 1 <= int(opcao) <= len(perfis):
             perfil = carregar_perfil(perfis[int(opcao)-1])
@@ -113,19 +137,17 @@ def _obter_valores_perfil(perfis, perfil_atual=None):
             }
 
     while True:
-        nome = input("Digite o nome do novo perfil: ").strip()
-        if not nome:
-            if perfil_atual["nome"]:
-                print(f"Manter nome atual '{perfil_atual['nome']}' para o perfil? (s/n): ")
-                if input().strip().lower() == 's':
-                    nome = perfil_atual["nome"]
-                    break
-            else:
-                print("O nome do perfil não pode ser vazio. Por favor, digite um nome.")
-        elif nome in perfis and nome != perfil_atual["nome"]:
-            print("Já existe um perfil com esse nome. Por favor, escolha outro nome.")
-        elif input(f"Confirma o '{nome}' para o novo perfil? (s/n): ").strip().lower() == 's':
+        if perfil_atual["nome"]:
+            nome = perfil_atual["nome"]
             break
+        else:
+            nome = input("Digite o nome do novo perfil: ").strip()
+            if not nome:
+                print("O nome do perfil não pode ser vazio. Por favor, digite um nome.")
+            elif nome in perfis and nome != perfil_atual["nome"]:
+                print("Já existe um perfil com esse nome. Por favor, escolha outro nome.")
+            elif input(f"Confirma o '{nome}' para o novo perfil? (s/n): ").strip().lower() == 's':
+                break
     
     while True:      
         idade = input("Digite a idade do aluno: ").strip()
@@ -207,3 +229,6 @@ def selecionar_topico():
     topico = input("Digite o tópico que deseja estudar: ").strip()
 
     return topico
+
+if __name__ == "__main__":
+    main()
