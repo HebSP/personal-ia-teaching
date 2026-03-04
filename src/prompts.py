@@ -36,13 +36,13 @@ def gerar_prompt_exercicio(topico, perfil):
     Gera um prompt para criar exercícios de fixação adaptados ao perfil do aluno.
     """
 
-    tarefa = f"Analise passo a passo e encontre a melhor forma de criar um exercício de fixação sobre o tema '{topico}' para este aluno.\n"
-    
+    tarefa = f"Analise passo a passo e encontre a melhor forma de criar um exercício de fixação sobre o tema '{topico}' para este aluno, com perguntas que estimulem o pensamento crítico.\n"
+
     prompt = f"""
 {_persona_e_papel(perfil, topico)}
 {tarefa}
 {_diretrizes(perfil)}
-O exercicio deve estimular o pensamento critico.
+O exercício deve estimular o pensamento crítico.
 De apenas o exercício de fixação sem nenhum texto adicional.
 """
     return prompt.strip()

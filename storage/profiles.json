@@ -1,0 +1,30 @@
+{
+  "João": {
+    "nome": "João",
+    "idade": 25,
+    "nivel": "Intermediário",
+    "estilo_aprendizagem": "Leitura-Escrita",
+    "data_criacao": "2026-03-04T18:05:54.602923"
+  },
+  "Claudia": {
+    "nome": "Claudia",
+    "idade": 15,
+    "nivel": "Intermediário",
+    "estilo_aprendizagem": "Leitura-Escrita",
+    "data_criacao": "2026-03-04T18:06:10.406540"
+  },
+  "André": {
+    "nome": "André",
+    "idade": 22,
+    "nivel": "Avançado",
+    "estilo_aprendizagem": "Cinestésico",
+    "data_criacao": "2026-03-04T18:06:36.472730"
+  },
+  "Pedro": {
+    "nome": "Pedro",
+    "idade": 3,
+    "nivel": "Iniciante",
+    "estilo_aprendizagem": "Visual",
+    "data_criacao": "2026-03-04T18:07:10.524872"
+  }
+}
