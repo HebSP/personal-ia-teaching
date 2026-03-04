@@ -8,7 +8,11 @@ from generator import configurar_cliente, gerar_exemplo, gerar_exercicio, gerar_
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "uma_chave_secreta_qualquer"
+
+app_key = os.getenv("FLASK_SECRET_KEY")
+if not app_key:
+    raise ValueError("FLASK_SECRET_KEY não encontrada no arquivo .env")
+app.secret_key = app_key
 
 @app.route("/", methods=["GET", "POST"])
 def index():
