@@ -45,8 +45,8 @@
                 <input type="hidden" name="acao" value="salvar_novo">
                 <label>Nome:</label>
                 <input type="text" name="nome" 
-                    value="{{ perfil_ativo.nome if perfil_ativo else '' }}" 
-                    required >
+                    value="{{ perfil_ativo.nome if perfil_ativo else '' }}"
+                    {% if perfil_ativo %}readonly{% endif %} required>
                 <label>Idade:</label>
                 <input type="number" name="idade" 
                     value="{{ perfil_ativo.idade if perfil_ativo else '' }}" 
